@@ -18,7 +18,7 @@ function About() {
 
     const navigate = useNavigate();
 
-    const API_URL = " http://localhost:8080/";
+    const API_URL = " http://64.226.87.167:8080/";
 
     const Purple = 'images/purple/1.png';
     const Orange = 'images/purple/2.png';
@@ -93,10 +93,10 @@ function About() {
                     }
                 }
 
-
-                arrRegistId.push({ id: registratioins[i]['0'], 'target_color': registratioins[i]['targetTrait'], tokenId: registratioins[i]['tokenId'], nftcolor: NFTcolor });
+                if(registratioins[i]['from'] != account)
+                    arrRegistId.push({ id: registratioins[i]['0'], 'target_color': registratioins[i]['targetTrait'], tokenId: registratioins[i]['tokenId'], nftcolor: NFTcolor });
             }
-
+            
             setArrRegistId(arrRegistId);
             setArrRegistIdFilter(arrRegistId);
         }
