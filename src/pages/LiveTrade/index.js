@@ -96,7 +96,7 @@ function About() {
                 if(registratioins[i]['from'] != account)
                     arrRegistId.push({ id: registratioins[i]['0'], 'target_color': registratioins[i]['targetTrait'], tokenId: registratioins[i]['tokenId'], nftcolor: NFTcolor });
             }
-            
+
             setArrRegistId(arrRegistId);
             setArrRegistIdFilter(arrRegistId);
         }
@@ -157,6 +157,7 @@ function About() {
         } catch (err) {
             console.log(err);
             setUpdateState(false);
+            initFunction();
         }
 
 
