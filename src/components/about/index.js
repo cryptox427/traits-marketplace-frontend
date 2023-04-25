@@ -55,15 +55,17 @@ function About() {
 
             const NFT = new web3.eth.Contract(metadata, addr);
             const totalCountNFT = await NFT.methods.balanceOf(account).call();
+            console.log('balance--', totalCountNFT);
             let arrTokenId = [];
             for (let i = 0; i < totalCountNFT; i++) {
                 let tokenId = await NFT.methods.tokenOfOwnerByIndex(account, i).call();
                 let url_temp = await NFT.methods.tokenURI(tokenId).call();
                 const detailToken = url_temp.replace("0.json", "10.json");
+                console.log(url_temp)
                 const metadata_attr = (await axios.get(detailToken)).data.attributes;
                 let color = "";
                 for (let j = 0; j < metadata_attr.length; j++) {
-                    if (metadata_attr[j].trait_type === "Color") {
+                    if (metadata_attr[j].trait_type.toLowerCase() === "color") {
                         color = metadata_attr[j].value;
                         break;
                     }
@@ -114,7 +116,6 @@ function About() {
             await NFTTrading.methods.registerTrade(activeTokenId, trait).send({ from: account });
         } catch (err) {
             console.log(err);
-            await initFunction();
         }
         await initFunction();
     }
@@ -259,7 +260,7 @@ function About() {
                                 <div className="detail_nft">handsome</div>
                                 </Col>
                             ))} */}
-                            
+
                                 {arrTokenId == undefined ?
                                     <>
                                         <div className="loading"><div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
