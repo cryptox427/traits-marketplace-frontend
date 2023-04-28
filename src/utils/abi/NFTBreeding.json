@@ -245,5 +245,28 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nft1",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nft2",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_nft3",
+        "type": "address"
+      }
+    ],
+    "name": "updateNFTContracts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

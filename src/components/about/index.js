@@ -57,23 +57,32 @@ function About() {
             const totalCountNFT = await NFT.methods.balanceOf(account).call();
             console.log('balance--', totalCountNFT);
             let arrTokenId = [];
+            let promises = [];
             for (let i = 0; i < totalCountNFT; i++) {
-                let tokenId = await NFT.methods.tokenOfOwnerByIndex(account, i).call();
-                let url_temp = await NFT.methods.tokenURI(tokenId).call();
-                const detailToken = url_temp.replace("0.json", "10.json");
-                console.log(url_temp)
-                const metadata_attr = (await axios.get(detailToken)).data.attributes;
-                let color = "";
-                for (let j = 0; j < metadata_attr.length; j++) {
-                    if (metadata_attr[j].trait_type.toLowerCase() === "color") {
-                        color = metadata_attr[j].value;
-                        break;
+                const newPromise = new Promise(async resolve => {
+                    let tokenId = await NFT.methods.tokenOfOwnerByIndex(account, i).call();
+                    let url_temp = await NFT.methods.tokenURI(tokenId).call();
+                    // const detailToken = url_temp.replace("0.json", "10.json");
+                    console.log(url_temp)
+                    const metadata_attr = (await axios.get(url_temp, {headers: {Accept: "text/plain"}})).data.attributes;
+                    let color = "";
+                    for (let j = 0; j < metadata_attr.length; j++) {
+                        if (metadata_attr[j].trait_type.toLowerCase() === "color") {
+                            color = metadata_attr[j].value;
+                            break;
+                        }
                     }
-                }
-                arrTokenId.push({ 'id': tokenId, 'color': color });
+                    arrTokenId.push({ 'id': tokenId, 'color': color });
+                    resolve();
+                })
+                promises.push(newPromise);
             }
 
-            setArrTokenId(arrTokenId);
+            Promise.all(promises).then(() => {
+                console.log('loaded');
+                setArrTokenId(arrTokenId);
+            })
+
         }
     }
 
@@ -103,9 +112,9 @@ function About() {
             const tradingABI = CONTRACTS['NFTTradingContract'][chainId]?.abi;
             const NFTTrading = new web3.eth.Contract(tradingABI, tradingAddr);
 
-            const metadata = CONTRACTS['NFTContract'][chainId]?.abi;
+            const abi = CONTRACTS['NFTContract'][chainId]?.abi;
             const addr = CONTRACTS['NFTContract'][chainId]?.address;
-            const NFT = new web3.eth.Contract(metadata, addr);
+            const NFT = new web3.eth.Contract(abi, addr);
 
             const approveState = await NFT.methods.getApproved(activeTokenId).call();
 
@@ -237,6 +246,7 @@ function About() {
                                         <option value='Yellow'>Yellow</option>
                                         <option value='Blue'>Blue</option>
                                         <option value='Green'>Green</option>
+                                        <option value='Cyan'>Cyan</option>
                                     </select>
                                     <Button variant="success" className="post_trade" onClick={postTrade} disabled={activeImage == null ? true : false} >POST TRADE</Button>
                                 </>
@@ -271,7 +281,7 @@ function About() {
                                             <>
                                                 {arrTokenId.map((data, i) => (
                                                     <Col lg={4} key = {i} onClick={() => clickNFTTrait(data.id)}>
-                                                        <img className={activeTokenId == data.id ? "activeImage" : ""} src={'images/purple/' + (data.id % 10 == 0 ? 10 : data.id % 10) + '.png'} />
+                                                        <img className={activeTokenId == data.id ? "activeImage" : ""} src={'images/nfts/' + data.color + '.png'} />
                                                         <div className="detail_nft">tokenid: {data.id} &nbsp;&nbsp;&nbsp;color: {data.color}</div>
                                                     </Col>
                                                 ))}

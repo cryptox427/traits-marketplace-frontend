@@ -18,7 +18,7 @@ function About() {
 
     const navigate = useNavigate();
 
-    const API_URL = " http://64.226.87.167:8080/";
+    const API_URL = " http://localhost:8080/";
 
     const Purple = 'images/purple/1.png';
     const Orange = 'images/purple/2.png';
@@ -54,12 +54,12 @@ function About() {
 
 
             const tokenURI = await NFT.methods.tokenURI(tokenId).call();
-            const detailToken = tokenURI.replace("0.json", "10.json");
-            const metadata_attr = (await axios.get(detailToken)).data.attributes;
+            // const detailToken = tokenURI.replace("0.json", "10.json");
+            const metadata_attr = (await axios.get(tokenURI)).data.attributes;
 
             let target_color = "";
             for (let i = 0; i < metadata_attr.length; i++) {
-                if (metadata_attr[i].trait_type === "Color") {
+                if (metadata_attr[i].trait_type.toLowerCase() === "color") {
                     target_color = metadata_attr[i].value;
                     break;
                 }
@@ -80,14 +80,14 @@ function About() {
                 const tokenIdURI = await NFT.methods.tokenURI(tokenNFTId).call();
                 const metadata_attr_2 = (await axios.get(tokenIdURI)).data.attributes;
                 for (let j = 0; j < metadata_attr_2.length; j++) {
-                    if (metadata_attr_2[j].trait_type === "Color") {
+                    if (metadata_attr_2[j].trait_type.toLowerCase() === "color") {
                         NFTcolor = metadata_attr_2[j].value;
                         break;
                     }
                 }
 
                 for (let i = 0; i < metadata_attr_2.length; i++) {
-                    if (metadata_attr_2[i].trait_type === "Color") {
+                    if (metadata_attr_2[i].trait_type.toLowerCase() === "color") {
                         NFTcolor = metadata_attr_2[i].value;
                         break;
                     }
@@ -134,7 +134,7 @@ function About() {
 
         console.log(API_URL + 'getSignature/' + account + '/' + registId + '/' + tokenId);
         try {
-            let response = await axios.get(API_URL + 'getSignature/' + account + '/' + registId + '/' + tokenId);
+            let response = await axios.get(API_URL + 'signature/trading?address=' + account + '&registrationid=' + registId + '&tokenid=' + tokenId);
 
 
             let resColor = response.data.resColor;
@@ -146,8 +146,7 @@ function About() {
 
             NFTTrading = new web3.eth.Contract(metadata2, addr2);
 
-            const buyFunc = await NFTTrading.methods.buy(registId, tokenId, resColor, resSig).send({ from: account });
-            buyFunc.wait();
+            await NFTTrading.methods.buy(registId, tokenId, resColor, resSig).send({ from: account });
             console.log('successfully buy action done.');
             localStorage.removeItem('registTokenId');
             let temp_arr = arrRegistId.filter(registId => registId[0] != activeRegistId);
@@ -227,6 +226,7 @@ function About() {
                                 <option value='Yellow'>Yellow</option>
                                 <option value='Blue'>Blue</option>
                                 <option value='Green'>Green</option>
+                                <option value='Cyan'>Cyan</option>
                             </select>
                         </div>
                         <div className="bear_list">
