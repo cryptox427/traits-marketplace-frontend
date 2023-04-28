@@ -5,18 +5,15 @@ import { useState, useContext, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import WalletConnect from "../../components/wallet/walletconnect";
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
 import Web3 from 'web3';
 import axios from "axios";
-
-import { redirect } from "react-router-dom";
 
 import { CONTRACTS } from '../../utils/contracts';
 import {CONSTANTS} from "../../utils/contants";
 
 let web3;
 
-function About() {
+const About = () => {
 
     const navigate = useNavigate();
 
