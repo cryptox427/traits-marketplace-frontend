@@ -12,10 +12,9 @@ import axios from "axios";
 import { redirect } from "react-router-dom";
 
 import { CONTRACTS } from '../../utils/contracts';
+import {CONSTANTS} from "../../utils/contants";
 
 let web3;
-const AboutImage = 'images/abossut-us.png';
-const API_URL = " http://64.226.87.167:8080/";
 
 function About() {
 
@@ -179,7 +178,7 @@ function About() {
 
             //get signature from Backend !!! 2023.3.17. 21:21
             ///getSignature/:address/:registrationid/:tokenid?
-            let response = await axios.get(API_URL + 'getSignature/' + account + '/' + 4 + '/' + 15);
+            let response = await axios.get(CONSTANTS.API_ENDPOINT + '/getSignature/' + account + '/' + 4 + '/' + 15);
 
 
             resColor = response.data.resColor;
