@@ -181,7 +181,7 @@ function Details() {
     }
 
     const back = async () => {
-        window.location.href = '/';
+        window.location.href = '/post';
     }
 
     const changeFilter = async (event) => {
@@ -207,8 +207,10 @@ function Details() {
                         <div className="about-title" data-aos="fade-up" data-aos-duration="2000">
                             TRADE <br /> DETAILS
                         </div>
-                        <div className="bear_list">
-                            <Row className="bear_list_row">
+                        <div style={{height: 50}}>
+                        </div>
+                        <div className="bear_list fixed-height">
+                            <Row className="bear_list_row fixed-height">
                                 {updateState === true ?
                                     <>
                                         <div className="one_page">
@@ -234,8 +236,10 @@ function Details() {
                                 }
                             </Row>
                         </div>
+                        <div style={{height: 50}}>
+                        </div>
                         <div className="btn-group">
-                            <Button variant="success" className="post_trade" onClick={actionTrade} disabled={updateState === true || activeAvailableItem === null}>REVIEW AND ACCEPT</Button>
+                            <Button variant="success" className="post_trade" onClick={actionTrade} disabled={updateState === true || activeAvailableItem === null}>TRADE</Button>
                             <Button variant="warning" className="withdraw_trade" onClick={back}>BACK</Button>
                         </div>
                     </Col>
