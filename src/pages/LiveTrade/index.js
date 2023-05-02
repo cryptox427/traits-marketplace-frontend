@@ -73,7 +73,7 @@ function About() {
             console.log(registratioins[0]);
             let arrRegistId = [];
             for (let i = 0; i < registratioins.length; i++) {
-                if(registratioins[i]['traded'] == true)
+                if(registratioins[i]['traded'] === true || registratioins[i].from === account)
                     continue;
                 let NFTcolor = "";
                 const tokenNFTId = registratioins[i]['tokenId'];
