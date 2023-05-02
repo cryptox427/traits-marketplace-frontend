@@ -78,7 +78,7 @@ function About() {
                 let NFTcolor = "";
                 const tokenNFTId = registratioins[i]['tokenId'];
                 const tokenIdURI = await NFT.methods.tokenURI(tokenNFTId).call();
-                const metadata_attr_2 = (await axios.get(tokenIdURI)).data.attributes;
+                const metadata_attr_2 = (await axios.get(tokenIdURI, {headers: {Accept: "text/plain"}})).data.attributes;
                 for (let i = 0; i < metadata_attr_2.length; i++) {
                     if (metadata_attr_2[i].trait_type.toLowerCase() === "color") {
                         NFTcolor = metadata_attr_2[i].value;
