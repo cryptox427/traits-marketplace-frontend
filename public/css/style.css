@@ -15,6 +15,9 @@ body {
 
 .one_page {
     padding: 3%;
+    position: fixed;
+    left: 0; right: 0; top: 0; bottom: 0;
+    overflow-y: scroll;
 }
 
 .post_trade {
@@ -63,7 +66,7 @@ body {
     margin-top: 20px;
     margin-bottom: 30px;
     padding: 3px;
-} 
+}
 
 .connect-wallet {
     width: 250px;
@@ -159,7 +162,7 @@ body {
 }
 
 .what_show img {
-    
+
 }
 
 .sorry_string {
@@ -187,11 +190,11 @@ body {
 .bear_list_row::-webkit-scrollbar {
     width: 4px;               /* width of the entire scrollbar */
   }
-  
+
   .bear_list_row::-webkit-scrollbar-track {
     background: gray;        /* color of the tracking area */
   }
-  
+
   .bear_list_row::-webkit-scrollbar-thumb {
     background-color: transparent;    /* color of the scroll thumb */
     border-radius: 20px;       /* roundness of the scroll thumb */
@@ -343,7 +346,7 @@ img {
       opacity: 0;
     }
   }
-  
+
 
 /* @media (max-width: 479px) { */
 @media (max-width: 768px) {
@@ -354,4 +357,9 @@ img {
     .image_description {
         width: 80%;
     }
+}
+
+.custom-select {
+    color: black!important;
+    width: 80%;
 }

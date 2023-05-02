@@ -7,6 +7,7 @@ const LiveTrade = lazy(() => import('./pages/LiveTrade'))
 const Trade = lazy(() => import('./pages/trade'))
 const WithDraw = lazy(() => import('./pages/withdraw'))
 const Breeding = lazy(() => import('./pages/breeding'))
+const Details = lazy(() => import("./pages/details"))
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route index path="/trade" element={<Trade />} />
             <Route index path="/my-post" element={<WithDraw />} />
             <Route index path="/breeding" element={<Breeding />} />
+            <Route index path="/details" element={<Details />} />
           </Routes>
       </Suspense>
     </BrowserRouter>

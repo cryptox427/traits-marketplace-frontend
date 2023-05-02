@@ -24,9 +24,9 @@ function About() {
     const Orange = 'images/purple/2.png';
 
     const { account, library, chainId, } = useWeb3React();
-    const [arrRegistId, setArrRegistId] = useState([]);
+    const [arrRegistId, setArrRegistId] = useState(null);
     const [arrRegistIdFilter, setArrRegistIdFilter] = useState([]);
-    const [activeImage, setActiveImage] = useState(0);
+    const [activeImage, setActiveImage] = useState(null);
     const [activeRegistId, setActiveRegistId] = useState(0);
     const [updateState, setUpdateState] = useState(false);
     let metadata1, addr1, metadata2, addr2, NFT, NFTTrading;
@@ -44,33 +44,33 @@ function About() {
                 return;
             }
 
-            let tokenId = localStorage.getItem('registTokenId');
-            if (tokenId == null)
-                return (<h1>Sorry, Can not find token Id. Please try again</h1>)
+            // let tokenId = localStorage.getItem('registTokenId');
+            // if (tokenId == null)
+            //     return (<h1>Sorry, Can not find token Id. Please try again</h1>)
             metadata1 = CONTRACTS['NFTContract'][chainId]?.abi;
             addr1 = CONTRACTS['NFTContract'][chainId]?.address;
 
             NFT = new web3.eth.Contract(metadata1, addr1);
-
-
-            const tokenURI = await NFT.methods.tokenURI(tokenId).call();
-            // const detailToken = tokenURI.replace("0.json", "10.json");
-            const metadata_attr = (await axios.get(tokenURI)).data.attributes;
-
-            let target_color = "";
-            for (let i = 0; i < metadata_attr.length; i++) {
-                if (metadata_attr[i].trait_type.toLowerCase() === "color") {
-                    target_color = metadata_attr[i].value;
-                    break;
-                }
-            }
+            //
+            //
+            // const tokenURI = await NFT.methods.tokenURI(tokenId).call();
+            // // const detailToken = tokenURI.replace("0.json", "10.json");
+            // const metadata_attr = (await axios.get(tokenURI)).data.attributes;
+            //
+            // let target_color = "";
+            // for (let i = 0; i < metadata_attr.length; i++) {
+            //     if (metadata_attr[i].trait_type.toLowerCase() === "color") {
+            //         target_color = metadata_attr[i].value;
+            //         break;
+            //     }
+            // }
 
             metadata2 = CONTRACTS['NFTTradingContract'][chainId]?.abi;
             addr2 = CONTRACTS['NFTTradingContract'][chainId]?.address;
 
             NFTTrading = new web3.eth.Contract(metadata2, addr2);
-            let registratioins = await NFTTrading.methods.getListByTrait(target_color).call();
-            console.log(registratioins);
+            let registratioins = await NFTTrading.methods.getRegistrationList().call();
+            console.log(registratioins[0]);
             let arrRegistId = [];
             for (let i = 0; i < registratioins.length; i++) {
                 if(registratioins[i]['traded'] == true)
@@ -79,13 +79,6 @@ function About() {
                 const tokenNFTId = registratioins[i]['tokenId'];
                 const tokenIdURI = await NFT.methods.tokenURI(tokenNFTId).call();
                 const metadata_attr_2 = (await axios.get(tokenIdURI)).data.attributes;
-                for (let j = 0; j < metadata_attr_2.length; j++) {
-                    if (metadata_attr_2[j].trait_type.toLowerCase() === "color") {
-                        NFTcolor = metadata_attr_2[j].value;
-                        break;
-                    }
-                }
-
                 for (let i = 0; i < metadata_attr_2.length; i++) {
                     if (metadata_attr_2[i].trait_type.toLowerCase() === "color") {
                         NFTcolor = metadata_attr_2[i].value;
@@ -93,27 +86,21 @@ function About() {
                     }
                 }
 
-                if(registratioins[i]['from'] != account)
-                    arrRegistId.push({ id: registratioins[i]['0'], 'target_color': registratioins[i]['targetTrait'], tokenId: registratioins[i]['tokenId'], nftcolor: NFTcolor });
+                    arrRegistId.push({ id: registratioins[i][0], tokenId: registratioins[i][3], color: NFTcolor });
             }
 
-            setArrRegistId(arrRegistId);
+            setArrRegistId([...arrRegistId]);
             setArrRegistIdFilter(arrRegistId);
         }
     }
 
-    const clickNFTFunc = async (i, j) => {
-        if (i % 10 == 0) {
-            setActiveImage(10);
-        }
-        else {
-            setActiveImage(i % 10);
-        }
-        setActiveRegistId(j);
-        console.log(j)
+    const clickNFTFunc = async (data) => {
+        setActiveRegistId(data.id);
+        setActiveImage(data.color);
     }
 
     const actionTrade = async () => {
+        window.location.href = `../details?regId=${activeRegistId}`
         setUpdateState(true)
         let registId = activeRegistId;
         let tokenId = localStorage.getItem('registTokenId');
@@ -199,10 +186,10 @@ function About() {
                             PLEASE CLICK ON A<br /> BEAR TO REVIEW<br /> THE TRADE DETAILS
                         </div>
                         <div className="what_get">
-                            {activeImage == 0 ?
+                            {activeImage === null ?
                                 <img className="" src={Orange} />
                                 :
-                                <img className="" src={'images/purple/' + activeImage + '.png'} />
+                                <img className="" src={'images/nfts/' + activeImage + '.png'} />
                             }
                         </div>
 
@@ -216,34 +203,23 @@ function About() {
                     </Col>
                     <Col lg={7}>
                         <div className="about-image" data-aos="fade-left" data-aos-duration="2000">
-                            <h2>LIVE TRADING:</h2>
-
-                            <select className="color_filter" onChange={changeFilter}>
-                                <option value='All'>All</option>
-                                <option value='Orange'>Orange</option>
-                                <option value='Red'>Red</option>
-                                <option value='Purple'>Purple</option>
-                                <option value='Yellow'>Yellow</option>
-                                <option value='Blue'>Blue</option>
-                                <option value='Green'>Green</option>
-                                <option value='Cyan'>Cyan</option>
-                            </select>
+                            <h2>LIVE TRADES</h2>
                         </div>
                         <div className="bear_list">
                             <Row className="bear_list_row">
-                            {updateState == true ?
+                            {updateState === true || arrRegistId === null ?
                             <>
                                 <div className="one_page">
                                     <div className="loading"><div className="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
                                 </div>
                             </> :
                             <>
-                                {arrRegistId.length != 0 ?
+                                {arrRegistId.length !== 0 ?
                                     <>
-                                        {arrRegistIdFilter.map((data, i) => (
-                                            <Col lg={4} key = {i} onClick={() => clickNFTFunc(data.tokenId, data.id)}>
-                                                <img className={activeRegistId == data.id ? "activeImage" : ""} src={'images/purple/' + (data % 10 == 0 ? 10 : data.tokenId % 10) + '.png'} />
-                                                <div className="detail_nft">Token ID: {data.tokenId} &nbsp;&nbsp;&nbsp;Target Color: {data.target_color}</div>
+                                        {arrRegistId.map((data, i) => (
+                                            <Col lg={4} key = {i} onClick={() => clickNFTFunc(data)}>
+                                                <img className={activeRegistId === data.id ? "activeImage" : ""} src={'images/nfts/' + data.color + '.png'} />
+                                                <div className="detail_nft">Token ID: {data.tokenId}</div>
                                             </Col>
                                         ))}
                                     </>

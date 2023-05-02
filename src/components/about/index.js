@@ -7,6 +7,9 @@ import WalletConnect from "../../components/wallet/walletconnect";
 import { useWeb3React } from '@web3-react/core';
 import Web3 from 'web3';
 import axios from "axios";
+import Select, {StylesConfig} from 'react-select';
+import makeAnimated from 'react-select/animated';
+import CreatableSelect from 'react-select/creatable';
 
 import { CONTRACTS } from '../../utils/contracts';
 import {CONSTANTS} from "../../utils/contants";
@@ -15,23 +18,27 @@ let web3;
 
 const About = () => {
 
-    const navigate = useNavigate();
-
-    const Purple = 'images/purple/1.png';
-    const Orange = 'images/purple/2.png';
-
     const { account, library, chainId, } = useWeb3React();
     const [arrTokenId, setArrTokenId] = useState(null);
     const [activeImage, setActiveImage] = useState(null);
     const [activeTokenId, setActiveTokenId] = useState(0);
 
     const [trait, setTrait] = useState("Orange");
+    const [traits, setTraits] = useState([]);
     const [checked, setChecked] = useState(1);
 
     // let metadata, addr, NFT;
+    const colorOpts = [
+        {value: "Blue", label: "Blue"},
+        {value: "Green", label: "Green"},
+        {value: "Orange", label: "Orange"},
+        {value: "Purple", label: "Purple"},
+        {value: "Red", label: "Red"},
+        {value: "Yellow", label: "Yellow"},
+        {value: "Cyan", label: "Cyan"},
+    ]
 
-    const imgArray = ['Blue', 'Green', 'Cyan', 'Orange', 'Purple', 'Red', 'Yellow', 'Blue', 'Green', 'Cyan', 'Orange', 'Purple', 'Red', 'Yellow'];
-
+    const animatedComponents = makeAnimated();
 
     useEffect(() => {
         (async () => {
@@ -82,16 +89,17 @@ const About = () => {
         }
     }
 
+    const onTraitChange = (val) => {
+        console.log(val)
+        const tempArr = val.map(a => a.value);
+        setTraits([...tempArr]);
+    }
 
-    const clickNFTTrait = async (i) => {
-        await localStorage.setItem('registTokenId', i);
-        if (i % 10 == 0) {
-            setActiveImage(10);
-        }
-        else {
-            setActiveImage(i % 10);
-        }
-        setActiveTokenId(i);
+
+    const clickNFTTrait = async (data) => {
+        await localStorage.setItem('registTokenId', data.id);
+        setActiveImage(data.color);
+        setActiveTokenId(data.id);
     }
 
     const buyNewNFT = async () => {
@@ -118,7 +126,9 @@ const About = () => {
                 await NFT.methods.approve(tradingAddr, activeTokenId).send({ from: account });
             }
 
-            await NFTTrading.methods.registerTrade(activeTokenId, trait).send({ from: account });
+            console.log('temp array----', traits, activeTokenId);
+
+            await NFTTrading.methods.registerTrade(activeTokenId, traits).send({ from: account });
         } catch (err) {
             console.log(err);
         }
@@ -131,66 +141,6 @@ const About = () => {
 
     const changeColor = async (event) => {
         setTrait(event.target.value);
-    }
-
-    const trade = async () => {
-        if (account && chainId && library) {
-            web3 = new Web3(library.provider);
-
-            if (chainId !== 0x13881 && chainId !== 0x137) {
-                return;
-            }
-
-            const metadata = CONTRACTS['NFTTradingContract'][chainId]?.abi;
-            const addr = CONTRACTS['NFTTradingContract'][chainId]?.address;
-
-
-            const NFTTradingweb3 = new web3.eth.Contract(metadata, addr);
-
-
-            let resColor, resSig;
-
-            // axios.get(API_URL + 'handsome/1992112').then(response => console.log(response));
-            // axios.get(API_URL + 'getSignature/' + account + '/2/1').then(
-            //     response => {
-            //         resColor = response.data.resColor;
-            //         resSig = response.data.resSig;
-            //     });
-
-            // const metadataNFT = CONTRACTS['NFTContract'][chainId]?.abi;
-            // const addrNFT = CONTRACTS['NFTContract'][chainId]?.address;
-
-            // const NFT = new web3.eth.Contract(metadataNFT, addrNFT);
-
-
-
-            // let tokenId = 4;
-
-            // // const tokenId = 3;
-
-            // let registrationId = 2;
-
-
-            // console.log(API_URL + 'getSignature/' + account + '/2/' + tokenId);
-
-            //get signature from Backend !!! 2023.3.17. 21:21
-            ///getSignature/:address/:registrationid/:tokenid?
-            let response = await axios.get(CONSTANTS.API_ENDPOINT + '/getSignature/' + account + '/' + 4 + '/' + 15);
-
-
-            resColor = response.data.resColor;
-            resSig = response.data.resSig.signature;
-
-
-
-            // const buyFunc = await NFTTradingweb3.methods.buy(registrationId, tokenId, resColor, resSig).call();
-            const buyFunc = await NFTTradingweb3.methods.buy(4, 15, resColor, resSig).call();
-            await buyFunc.wait();
-
-            console.log('successfully buy action done.');
-            console.log(buyFunc);
-
-        }
     }
 
     return (
@@ -212,7 +162,7 @@ const About = () => {
                                 {activeImage == null ?
                                     <img className="" src={'images/purple/10.png'} />
                                     :
-                                    <img className="" src={'images/purple/' + activeImage + '.png'} />
+                                    <img className="" src={'images/nfts/' + activeImage + '.png'} />
                                 }
                             </div>
 
@@ -235,15 +185,23 @@ const About = () => {
                             {checked == 1 ? <Button variant="primary" className="post_trade" onClick={buyNewNFT} disabled={activeImage == null ? true : false} >BUY NEW TRAIT</Button> : <></>}
                             {checked == 2 ?
                                 <>
-                                    <select className="color_picker" onChange={changeColor} value={trait}>
-                                        <option value='Orange'>Orange</option>
-                                        <option value='Red'>Red</option>
-                                        <option value='Purple'>Purple</option>
-                                        <option value='Yellow'>Yellow</option>
-                                        <option value='Blue'>Blue</option>
-                                        <option value='Green'>Green</option>
-                                        <option value='Cyan'>Cyan</option>
-                                    </select>
+                                    {/*<select className="color_picker" onChange={changeColor} value={trait}>*/}
+                                    {/*    <option value='Orange'>Orange</option>*/}
+                                    {/*    <option value='Red'>Red</option>*/}
+                                    {/*    <option value='Purple'>Purple</option>*/}
+                                    {/*    <option value='Yellow'>Yellow</option>*/}
+                                    {/*    <option value='Blue'>Blue</option>*/}
+                                    {/*    <option value='Green'>Green</option>*/}
+                                    {/*    <option value='Cyan'>Cyan</option>*/}
+                                    {/*</select>*/}
+                                    <CreatableSelect
+                                        closeMenuOnSelect={false}
+                                        components={animatedComponents}
+                                        isMulti
+                                        options={colorOpts}
+                                        className={'custom-select'}
+                                        onChange={onTraitChange}
+                                    />
                                     <Button variant="success" className="post_trade" onClick={postTrade} disabled={activeImage == null ? true : false} >POST TRADE</Button>
                                 </>
                                 :
@@ -276,7 +234,7 @@ const About = () => {
                                         {arrTokenId.length != 0 ?
                                             <>
                                                 {arrTokenId.map((data, i) => (
-                                                    <Col lg={4} key = {i} onClick={() => clickNFTTrait(data.id)}>
+                                                    <Col lg={4} key = {i} onClick={() => clickNFTTrait(data)}>
                                                         <img className={activeTokenId == data.id ? "activeImage" : ""} src={'images/nfts/' + data.color + '.png'} />
                                                         <div className="detail_nft">tokenid: {data.id} &nbsp;&nbsp;&nbsp;color: {data.color}</div>
                                                     </Col>

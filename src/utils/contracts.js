@@ -5,7 +5,7 @@ const NFTBreeding = require("./abi/NFTBreeding.json")
 export const CONTRACTS = {
   ['NFTTradingContract']: {
     137: {address: "0x49b3ec0adee8876449a760b68f0ee68af9eeb631", abi: NFTTrading},
-    80001: {address: "0x3A6B1Af1dFA32115cB9251f616559D40AB14fd00", abi: NFTTrading}
+    80001: {address: "0xDE9118EC83D823d5E5E96313f2DADAb0daECa886", abi: NFTTrading}
   },
   ['NFTContract']: {
     137: {address: "0xfd868f02b522ad681b6913dae7759127ea7d599e", abi: NFT},

@@ -148,80 +148,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "string",
-            "name": "targetTrait",
-            "type": "string"
-          },
-          {
-            "internalType": "bool",
-            "name": "traded",
-            "type": "bool"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timeRegistered",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timeTraded",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "withdrawn",
-            "type": "bool"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timeWithdrawn",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct NFTTradingWrapper.Registration[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_color",
-        "type": "string"
-      }
-    ],
-    "name": "getListByTrait",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "registrationId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "from",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "to",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "targetTrait",
-            "type": "string"
+            "internalType": "string[]",
+            "name": "targetTraits",
+            "type": "string[]"
           },
           {
             "internalType": "bool",
@@ -303,9 +232,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "string",
-            "name": "targetTrait",
-            "type": "string"
+            "internalType": "string[]",
+            "name": "targetTraits",
+            "type": "string[]"
           },
           {
             "internalType": "bool",
@@ -381,9 +310,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "string",
-            "name": "targetTrait",
-            "type": "string"
+            "internalType": "string[]",
+            "name": "targetTraits",
+            "type": "string[]"
           },
           {
             "internalType": "bool",
@@ -539,9 +468,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "color",
-        "type": "string"
+        "internalType": "string[]",
+        "name": "targetTraits",
+        "type": "string[]"
       }
     ],
     "name": "registerTrade",

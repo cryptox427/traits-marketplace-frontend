@@ -47,7 +47,7 @@ function WithDraw() {
             const NFTTrading = new web3.eth.Contract(metadata, addr);
 
             const arrPostedList = await NFTTrading.methods.getListBySeller(account).call();
-            let tmp_arrPostedList = arrPostedList.filter(postedList => postedList.traded == false && postedList.withdrawn == false)
+            let tmp_arrPostedList = arrPostedList.filter(postedList => postedList.traded === false && postedList.withdrawn === false)
 
             // let arrTokenId = [];
             // for (let i = 0; i < arrPostedList; i++) {
@@ -75,9 +75,9 @@ function WithDraw() {
         try {
             const metadata = CONTRACTS['NFTTradingContract'][chainId]?.abi;
             const addr = CONTRACTS['NFTTradingContract'][chainId]?.address;
-    
+
             const NFTTrading = new web3.eth.Contract(metadata, addr);
-    
+
             const arrPostedList = await NFTTrading.methods.withdraw(registrationId).send({ from: account });
             await initFunction();
         } catch (error)
@@ -142,13 +142,13 @@ function WithDraw() {
                                                     {arrTokenId.map((img, i) => (
                                                         <Col lg={4} key = {i} onClick={() => clickNFTFunc(img)}>
                                                             <img className={activeImage == img.tokenId ? "activeImage" : ""} src={'images/purple/' + (img.tokenId % 10 == 0 ? 10 : img.tokenId % 10) + '.png'} />
-                                                            <div className="detail_nft">tokenid: {img.tokenId} &nbsp;&nbsp;&nbsp;trait color: {img.targetTrait}</div>
+                                                            <div className="detail_nft">tokenid: {img.tokenId} &nbsp;&nbsp;&nbsp;trait color: {img.targetTraits.join(',')}</div>
                                                         </Col>
                                                     ))}
                                                 </>
                                                 :
                                                 <>
-                                                    <h1>There is no Items you posted.</h1>
+                                                    <h1>There is no available Items you posted.</h1>
                                                 </>
                                         }
                                     </>
