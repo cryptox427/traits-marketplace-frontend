@@ -229,7 +229,7 @@ function Details() {
                                             </>
                                             :
                                             <>
-                                                <h1>There is no Items to display..</h1>
+                                                <h1>You have no available tokens to be exchanged</h1>
                                             </>
                                         }
                                     </>
@@ -244,9 +244,6 @@ function Details() {
                         </div>
                     </Col>
                     <Col lg={7}>
-                        <div className="about-image" data-aos="fade-left" data-aos-duration="2000">
-                            <h2>LIVE TRADES</h2>
-                        </div>
                         <div className="bear_list">
                             <Row className="bear_list_row">
                                 {updateState ?
